@@ -1,0 +1,66 @@
+/* Custom styles for VuGo */
+
+/* Vue cloak for hiding unrendered components */
+[v-cloak] {
+  display: none !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Task card styles */
+.task-card {
+  transition: all 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Column styles */
+.column {
+  min-height: 500px;
+}
+
+/* Drag and drop styles */
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-drag {
+  opacity: 0.8;
+}
+
+/* Priority colors */
+.priority-low {
+  border-left: 4px solid #10b981;
+}
+
+.priority-medium {
+  border-left: 4px solid #f59e0b;
+}
+
+.priority-high {
+  border-left: 4px solid #ef4444;
+}
+
+.priority-urgent {
+  border-left: 4px solid #dc2626;
+}
