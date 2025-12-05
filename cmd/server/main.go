@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/zou/vugo/internal/database"
-	"github.com/zou/vugo/internal/server"
+	"github.com/erickhilda/vugo/internal/database"
+	"github.com/erickhilda/vugo/internal/server"
 )
 
 func main() {
