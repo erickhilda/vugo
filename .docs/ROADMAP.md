@@ -188,17 +188,32 @@ Template engine sudah setup dengan support untuk Vue 3 (CDN), Tailwind CSS, VueU
 - Session management (secure cookies)
 - Password hashing (bcrypt)
 - Auth middleware (protected routes)
-- Login/Register pages
+- Login/Register pages dengan Vue forms
 
 ### Files to Create
 
-- `internal/handlers/auth.go`
-- `internal/services/auth.go`
-- `internal/middleware/auth.go`
-- `db/queries/users.sql`
-- `db/queries/sessions.sql`
-- `templates/pages/login.html`
-- `templates/pages/register.html`
+- `internal/handlers/auth.go` - Auth handlers (register, login, logout)
+- `internal/services/auth.go` - Auth business logic
+- `internal/middleware/auth.go` - Auth middleware (update dari placeholder)
+- `templates/pages/login.html` - Login page dengan Vue form
+- `templates/pages/register.html` - Register page dengan Vue form
+
+### Database Queries
+
+- ✅ Users queries (already exists)
+- ✅ Sessions queries (already exists)
+
+### Key Features
+
+- Secure password hashing dengan bcrypt
+- Cookie-based session management
+- Protected routes dengan auth middleware
+- Form validation di frontend dan backend
+- Error handling dan user feedback
+
+### See Also
+
+Detail implementasi: [M4 Authentication Documentation](milestones/M4-authentication.md)
 
 ---
 
@@ -209,19 +224,36 @@ Template engine sudah setup dengan support untuk Vue 3 (CDN), Tailwind CSS, VueU
 ### Deliverables
 
 - Create/Read/Update/Delete projects
-- Project list page
+- Project list page dengan Vue components
 - Project detail page
-- Project settings
+- Project settings page
 - API endpoints untuk Vue reactivity
+- Archive/Unarchive functionality
 
 ### Files to Create
 
-- `internal/handlers/projects.go`
-- `internal/services/projects.go`
-- `db/queries/projects.sql`
-- `templates/pages/projects/index.html`
-- `templates/pages/projects/show.html`
-- `templates/pages/projects/settings.html`
+- `internal/handlers/projects.go` - Project handlers
+- `internal/services/projects.go` - Project business logic
+- `templates/pages/projects/index.html` - Projects list
+- `templates/pages/projects/show.html` - Project detail
+- `templates/pages/projects/new.html` - Create project
+- `templates/pages/projects/settings.html` - Project settings
+
+### Database Queries
+
+- ✅ Projects queries (already exists)
+
+### Key Features
+
+- Project CRUD dengan ownership validation
+- Project color untuk visual identification
+- Archive/Unarchive untuk soft delete
+- Project member management (basic)
+- Activity logging untuk project actions
+
+### See Also
+
+Detail implementasi: [M5 Projects Documentation](milestones/M5-projects.md)
 
 ---
 
@@ -232,19 +264,34 @@ Template engine sudah setup dengan support untuk Vue 3 (CDN), Tailwind CSS, VueU
 ### Deliverables
 
 - Board management per project
-- Column CRUD
-- Drag & drop column reordering
-- WIP limits
-- Board view page
+- Column CRUD operations
+- Drag & drop column reordering dengan SortableJS
+- WIP limits untuk columns
+- Board view page dengan Kanban layout
 
 ### Files to Create
 
-- `internal/handlers/boards.go`
-- `internal/services/boards.go`
-- `db/queries/boards.sql`
-- `db/queries/columns.sql`
-- `templates/pages/boards/show.html`
-- `templates/components/column.html`
+- `internal/handlers/boards.go` - Board & column handlers
+- `internal/services/boards.go` - Board & column business logic
+- `templates/pages/boards/show.html` - Board view
+- `templates/components/column.html` - Column component
+
+### Database Queries
+
+- ✅ Boards queries (already exists)
+- ✅ Columns queries (already exists)
+
+### Key Features
+
+- Multiple boards per project
+- Kanban board layout
+- Drag & drop untuk column reordering
+- WIP limit dengan visual indicators
+- Column color customization
+
+### See Also
+
+Detail implementasi: [M6 Boards Documentation](milestones/M6-boards.md)
 
 ---
 
@@ -254,20 +301,36 @@ Template engine sudah setup dengan support untuk Vue 3 (CDN), Tailwind CSS, VueU
 
 ### Deliverables
 
-- Task CRUD
-- Drag & drop tasks between columns
-- Task detail modal
-- Priority & due dates
-- Task assignees
+- Task CRUD operations
+- Drag & drop tasks between columns dengan SortableJS
+- Task detail modal dengan full information
+- Priority levels (low, medium, high, urgent)
+- Due dates dengan reminders
+- Task assignees (multiple users)
 
 ### Files to Create
 
-- `internal/handlers/tasks.go`
-- `internal/services/tasks.go`
-- `db/queries/tasks.sql`
-- `db/queries/task_assignees.sql`
-- `templates/components/task-card.html`
-- `templates/components/task-modal.html`
+- `internal/handlers/tasks.go` - Task handlers
+- `internal/services/tasks.go` - Task business logic
+- `templates/components/task-card.html` - Task card component
+- `templates/components/task-modal.html` - Task detail modal
+
+### Database Queries
+
+- ✅ Tasks queries (already exists)
+- ✅ Task assignees queries (already exists)
+
+### Key Features
+
+- Full task CRUD dengan validation
+- Drag & drop between columns
+- Priority color coding
+- Due date management
+- Multiple assignees support
+
+### See Also
+
+Detail implementasi: [M7 Tasks Documentation](milestones/M7-tasks.md)
 
 ---
 
@@ -277,22 +340,39 @@ Template engine sudah setup dengan support untuk Vue 3 (CDN), Tailwind CSS, VueU
 
 ### Deliverables
 
-- Label management
-- Task labels
-- Checklist items
-- Comments thread
-- Activity logging
+- Label management per project
+- Task labeling (many-to-many)
+- Checklist items dengan completion tracking
+- Comments thread untuk tasks
+- Activity logging untuk all actions
 
 ### Files to Create
 
-- `internal/handlers/labels.go`
-- `internal/handlers/comments.go`
-- `db/queries/labels.sql`
-- `db/queries/checklist_items.sql`
-- `db/queries/comments.sql`
-- `db/queries/activities.sql`
-- `templates/components/checklist.html`
-- `templates/components/comments.html`
+- `internal/handlers/labels.go` - Label handlers
+- `internal/handlers/comments.go` - Comment handlers
+- `internal/services/labels.go` - Label business logic
+- `internal/services/comments.go` - Comment business logic
+- `templates/components/checklist.html` - Checklist component
+- `templates/components/comments.html` - Comments component
+
+### Database Queries
+
+- ✅ Labels queries (already exists)
+- ✅ Task labels queries (already exists)
+- ✅ Checklist items queries (already exists)
+- ✅ Comments queries (already exists)
+- ✅ Activities queries (already exists)
+
+### Key Features
+
+- Project-level labels dengan color coding
+- Checklist dengan progress tracking
+- Comments dengan user info
+- Activity log untuk audit trail
+
+### See Also
+
+Detail implementasi: [M8 Extras Documentation](milestones/M8-extras.md)
 
 ---
 
@@ -302,18 +382,32 @@ Template engine sudah setup dengan support untuk Vue 3 (CDN), Tailwind CSS, VueU
 
 ### Deliverables
 
-- Dashboard dengan overview
-- My tasks view
-- Upcoming deadlines
-- Activity feed
-- Global search
+- User dashboard dengan overview statistics
+- My Tasks view (tasks assigned to user)
+- Upcoming deadlines dengan calendar view
+- Activity feed dengan filtering
+- Global search untuk projects, tasks, comments
 
 ### Files to Create
 
-- `internal/handlers/dashboard.go`
-- `internal/handlers/search.go`
-- `templates/pages/dashboard.html`
-- `templates/components/activity-feed.html`
+- `internal/handlers/dashboard.go` - Dashboard handlers
+- `internal/handlers/search.go` - Search handlers
+- `internal/services/dashboard.go` - Dashboard business logic
+- `internal/services/search.go` - Search business logic
+- `templates/pages/dashboard.html` - Dashboard page
+- `templates/components/activity-feed.html` - Activity feed component
+
+### Key Features
+
+- Stats overview dengan cards
+- My Tasks dengan filters
+- Upcoming deadlines dengan highlighting
+- Activity feed dengan pagination
+- Full-text search across content
+
+### See Also
+
+Detail implementasi: [M9 Dashboard Documentation](milestones/M9-dashboard.md)
 
 ---
 
@@ -323,19 +417,35 @@ Template engine sudah setup dengan support untuk Vue 3 (CDN), Tailwind CSS, VueU
 
 ### Deliverables
 
-- Dark mode toggle
-- Responsive design fixes
-- Performance optimization
+- Dark mode toggle dengan persistence
+- Responsive design untuk mobile/tablet/desktop
+- Performance optimization (queries, caching)
 - Error handling improvements
-- Environment configuration
-- Docker setup (optional)
+- Environment configuration management
+- Docker setup untuk deployment
+- Documentation updates
 
 ### Files to Create/Update
 
-- `config/config.go`
-- `Dockerfile`
-- `docker-compose.yml`
+- `config/config.go` - Configuration management
+- `Dockerfile` - Docker image
+- `docker-compose.yml` - Docker compose
+- `.env.example` - Environment variables example
+- `docs/DEPLOYMENT.md` - Deployment guide
 - Various CSS/template fixes
+
+### Key Features
+
+- Theme switching (dark/light)
+- Mobile-first responsive design
+- Optimized database queries
+- User-friendly error messages
+- Production-ready configuration
+- Docker deployment
+
+### See Also
+
+Detail implementasi: [M10 Polish Documentation](milestones/M10-polish.md)
 
 ---
 
