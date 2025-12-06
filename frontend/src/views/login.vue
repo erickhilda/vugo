@@ -1,45 +1,45 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import Password from 'primevue/password'
-import Card from 'primevue/card'
-import Message from 'primevue/message'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import Password from "primevue/password";
+import Card from "primevue/card";
+import Message from "primevue/message";
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
-const email = ref('')
-const password = ref('')
-const error = ref('')
-const loading = ref(false)
+const email = ref("");
+const password = ref("");
+const error = ref("");
+const loading = ref(false);
 
 const handleLogin = async () => {
-  error.value = ''
+  error.value = "";
 
   // Validation
   if (!email.value || !password.value) {
-    error.value = 'Email and password are required'
-    return
+    error.value = "Email and password are required";
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
-    await authStore.login(email.value, password.value)
-    router.push('/dashboard')
+    await authStore.login(email.value, password.value);
+    router.push("/dashboard");
   } catch (err: any) {
-    error.value = err.message || 'Login failed. Please check your credentials.'
+    error.value = err.message || "Login failed. Please check your credentials.";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const goToRegister = () => {
-  router.push('/register')
-}
+  router.push("/register");
+};
 </script>
 
 <template>
