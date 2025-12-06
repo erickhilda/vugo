@@ -2,6 +2,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { zodResolver } from "@primevue/forms/resolvers/zod";
+import { z } from "zod";
+import { Form } from "@primevue/forms";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
@@ -11,39 +14,42 @@ import Message from "primevue/message";
 const router = useRouter();
 const authStore = useAuthStore();
 
-const name = ref("");
-const email = ref("");
-const password = ref("");
-const confirmPassword = ref("");
 const error = ref("");
 const loading = ref(false);
 
-const handleRegister = async () => {
+// Initial form values
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+// Zod validation schema
+const registerSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().min(1, "Email is required").email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+const resolver = zodResolver(registerSchema);
+
+const handleRegister = async (event: { values: Record<string, string> }) => {
   error.value = "";
-
-  // Validation
-  if (!name.value || !email.value || !password.value || !confirmPassword.value) {
-    error.value = "All fields are required";
-    return;
-  }
-
-  if (password.value !== confirmPassword.value) {
-    error.value = "Passwords do not match";
-    return;
-  }
-
-  if (password.value.length < 8) {
-    error.value = "Password must be at least 8 characters";
-    return;
-  }
-
   loading.value = true;
 
   try {
-    await authStore.register(email.value, password.value, name.value);
+    const { email, password, name } = event.values;
+    await authStore.register(email!, password!, name!);
     router.push("/dashboard");
-  } catch (err: any) {
-    error.value = err.message || "Registration failed. Please try again.";
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : "Registration failed. Please try again.";
   } finally {
     loading.value = false;
   }
@@ -55,143 +61,121 @@ const goToLogin = () => {
 </script>
 
 <template>
-  <div class="auth-container">
-    <Card class="auth-card">
+  <div
+    class="flex justify-center items-center min-h-screen p-8 bg-gradient-to-br from-[#667eea] to-[#764ba2]"
+  >
+    <Card class="w-full max-w-[450px]">
       <template #header>
-        <div class="auth-header">
-          <h2>Create Account</h2>
-          <p>Join Vugo and start managing your tasks efficiently.</p>
+        <div class="text-center pt-8 px-8">
+          <h2 class="mb-2 text-3xl font-semibold">Create Account</h2>
+          <p class="text-surface-500 dark:text-surface-400 text-[0.95rem]">
+            Join Vugo and start managing your tasks efficiently.
+          </p>
         </div>
       </template>
 
       <template #content>
-        <form @submit.prevent="handleRegister" class="auth-form">
-          <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
+        <Form
+          v-slot="$form"
+          :initialValues="initialValues"
+          :resolver="resolver"
+          @submit="handleRegister"
+        >
+          <div class="flex flex-col gap-6">
+            <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
 
-          <div class="form-field">
-            <label for="name">Name</label>
-            <InputText
-              id="name"
-              v-model="name"
-              type="text"
-              placeholder="Enter your name"
+            <div class="flex flex-col gap-2">
+              <label for="name" class="font-medium text-[0.95rem]">Name</label>
+              <InputText
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Enter your name"
+                class="w-full"
+                :disabled="loading"
+                :invalid="$form.name?.invalid"
+              />
+              <Message v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
+                {{ $form.name.error?.message }}
+              </Message>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="email" class="font-medium text-[0.95rem]">Email</label>
+              <InputText
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                class="w-full"
+                :disabled="loading"
+                :invalid="$form.email?.invalid"
+              />
+              <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
+                {{ $form.email.error?.message }}
+              </Message>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="password" class="font-medium text-[0.95rem]">Password</label>
+              <Password
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                toggleMask
+                class="w-full"
+                :disabled="loading"
+                :invalid="$form.password?.invalid"
+              />
+              <Message
+                v-if="$form.password?.invalid"
+                severity="error"
+                size="small"
+                variant="simple"
+              >
+                {{ $form.password.error?.message }}
+              </Message>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="confirmPassword" class="font-medium text-[0.95rem]"
+                >Confirm Password</label
+              >
+              <Password
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Confirm your password"
+                :feedback="false"
+                toggleMask
+                class="w-full"
+                :disabled="loading"
+                :invalid="$form.confirmPassword?.invalid"
+              />
+              <Message
+                v-if="$form.confirmPassword?.invalid"
+                severity="error"
+                size="small"
+                variant="simple"
+              >
+                {{ $form.confirmPassword.error?.message }}
+              </Message>
+            </div>
+
+            <Button
+              type="submit"
+              label="Register"
+              icon="pi pi-user-plus"
               class="w-full"
-              :disabled="loading"
+              :loading="loading"
             />
-          </div>
 
-          <div class="form-field">
-            <label for="email">Email</label>
-            <InputText
-              id="email"
-              v-model="email"
-              type="email"
-              placeholder="Enter your email"
-              class="w-full"
-              :disabled="loading"
-            />
+            <div class="flex justify-center items-center gap-2 text-sm">
+              <span>Already have an account?</span>
+              <Button label="Login" link @click="goToLogin" :disabled="loading" />
+            </div>
           </div>
-
-          <div class="form-field">
-            <label for="password">Password</label>
-            <Password
-              id="password"
-              v-model="password"
-              placeholder="Enter your password"
-              toggleMask
-              class="w-full"
-              :disabled="loading"
-            />
-          </div>
-
-          <div class="form-field">
-            <label for="confirmPassword">Confirm Password</label>
-            <Password
-              id="confirmPassword"
-              v-model="confirmPassword"
-              placeholder="Confirm your password"
-              :feedback="false"
-              toggleMask
-              class="w-full"
-              :disabled="loading"
-            />
-          </div>
-
-          <Button
-            type="submit"
-            label="Register"
-            icon="pi pi-user-plus"
-            class="w-full"
-            :loading="loading"
-          />
-
-          <div class="auth-footer">
-            <span>Already have an account?</span>
-            <Button label="Login" link @click="goToLogin" :disabled="loading" />
-          </div>
-        </form>
+        </Form>
       </template>
     </Card>
   </div>
 </template>
-
-<style scoped>
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 450px;
-}
-
-.auth-header {
-  text-align: center;
-  padding: 2rem 2rem 0;
-}
-
-.auth-header h2 {
-  margin-bottom: 0.5rem;
-  font-size: 1.8rem;
-  font-weight: 600;
-}
-
-.auth-header p {
-  color: var(--text-color-secondary);
-  font-size: 0.95rem;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-field label {
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.auth-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-}
-</style>
