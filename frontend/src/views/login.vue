@@ -25,7 +25,7 @@ const initialValues = {
 
 // Zod validation schema
 const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  email: z.email("Invalid email address").min(1, "Email is required"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -46,15 +46,11 @@ const handleLogin = async (event: { values: Record<string, string> }) => {
     loading.value = false;
   }
 };
-
-const goToRegister = () => {
-  router.push("/register");
-};
 </script>
 
 <template>
   <div
-    class="flex justify-center items-center min-h-screen p-8 bg-linear-to-br from-[#667eea] to-[#764ba2]"
+    class="flex justify-center items-center min-h-screen p-8 bg-linear-to-br from-light via-secondary-50 to-primary-50"
   >
     <Card class="w-full max-w-[450px]">
       <template #header>
@@ -114,17 +110,15 @@ const goToRegister = () => {
               </Message>
             </div>
 
-            <Button
-              type="submit"
-              label="Login"
-              icon="pi pi-sign-in"
-              class="w-full"
-              :loading="loading"
-            />
+            <Button type="submit" label="Login" icon="pi pi-sign-in" fluid :loading="loading" />
 
             <div class="flex justify-center items-center gap-2 text-sm">
               <span>Don't have an account?</span>
-              <Button label="Register" link @click="goToRegister" :disabled="loading" />
+              <a
+                href="/register"
+                class="text-primary-500 hover:text-primary-600 font-medium hover:underline"
+                >Register</a
+              >
             </div>
           </div>
         </Form>

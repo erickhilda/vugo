@@ -3,6 +3,9 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { computed } from "vue";
 import Button from "primevue/button";
+import Card from "primevue/card";
+import Badge from "primevue/badge";
+import Divider from "primevue/divider";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -20,117 +23,126 @@ const goToRegister = () => {
 const goToDashboard = () => {
   router.push("/dashboard");
 };
+
+const features = [
+  {
+    icon: "pi pi-check-circle",
+    title: "Task Management",
+    description: "Organize your tasks efficiently with our intuitive interface",
+    badge: "Core",
+  },
+  {
+    icon: "pi pi-users",
+    title: "Team Collaboration",
+    description: "Work together with your team seamlessly",
+    badge: "Pro",
+  },
+  {
+    icon: "pi pi-chart-line",
+    title: "Track Progress",
+    description: "Monitor your progress with detailed analytics",
+    badge: "Premium",
+  },
+];
 </script>
 
 <template>
-  <div class="landing-container">
+  <div
+    class="bg-linear-to-br from-light via-secondary-50 to-primary-50 flex justify-center items-center min-h-screen p-8"
+  >
     <div class="landing-content">
       <div class="landing-header">
+        <Badge value="v1.0" severity="success" class="mb-4" />
         <h1>Welcome to Vugo</h1>
         <p>A modern task management application built with Vue 3 and Go</p>
       </div>
 
+      <Divider />
+
       <div class="landing-actions">
         <template v-if="!isAuthenticated">
-          <Button label="Login" icon="pi pi-sign-in" @click="goToLogin" />
+          <Button label="Login" icon="pi pi-sign-in" size="large" @click="goToLogin" />
           <Button
             label="Register"
             icon="pi pi-user-plus"
             severity="secondary"
+            size="large"
+            outlined
             @click="goToRegister"
           />
         </template>
         <template v-else>
-          <Button label="Go to Dashboard" icon="pi pi-home" @click="goToDashboard" />
+          <Button label="Go to Dashboard" icon="pi pi-home" size="large" @click="goToDashboard" />
         </template>
       </div>
 
+      <Divider />
+
       <div class="landing-features">
-        <div class="feature-card">
-          <i class="pi pi-check-circle"></i>
-          <h3>Task Management</h3>
-          <p>Organize your tasks efficiently with our intuitive interface</p>
-        </div>
-        <div class="feature-card">
-          <i class="pi pi-users"></i>
-          <h3>Team Collaboration</h3>
-          <p>Work together with your team seamlessly</p>
-        </div>
-        <div class="feature-card">
-          <i class="pi pi-chart-line"></i>
-          <h3>Track Progress</h3>
-          <p>Monitor your progress with detailed analytics</p>
-        </div>
+        <Card v-for="(feature, index) in features" :key="index">
+          <template #title>
+            <div style="display: flex; align-items: center; gap: 1rem">
+              <i :class="feature.icon" style="font-size: 2rem"></i>
+              {{ feature.title }}
+            </div>
+          </template>
+          <template #subtitle>
+            <Badge :value="feature.badge" severity="contrast" />
+          </template>
+          <template #content>
+            {{ feature.description }}
+          </template>
+        </Card>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.landing-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.landing-content {
+  max-width: 1200px;
+  width: 100%;
 }
 
-.landing-content {
+.landing-header {
   text-align: center;
-  color: white;
-  max-width: 1200px;
+  margin-bottom: 2rem;
 }
 
 .landing-header h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
+  font-size: 3rem;
+  margin: 1rem 0;
 }
 
 .landing-header p {
-  font-size: 1.5rem;
-  margin-bottom: 3rem;
-  opacity: 0.9;
+  font-size: 1.25rem;
+  margin: 0;
 }
 
 .landing-actions {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-bottom: 5rem;
+  flex-wrap: wrap;
 }
 
 .landing-features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 4rem;
+  gap: 1.5rem;
 }
 
-.feature-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 2rem;
-  border-radius: 1rem;
-  transition: transform 0.3s;
-}
+@media (max-width: 768px) {
+  .landing-header h1 {
+    font-size: 2rem;
+  }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-}
+  .landing-header p {
+    font-size: 1rem;
+  }
 
-.feature-card i {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.feature-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.feature-card p {
-  opacity: 0.9;
+  .landing-features {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

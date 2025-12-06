@@ -29,7 +29,7 @@ const initialValues = {
 const registerSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
-    email: z.string().min(1, "Email is required").email("Invalid email address"),
+    email: z.email("Invalid email address").min(1, "Email is required"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
@@ -54,15 +54,11 @@ const handleRegister = async (event: { values: Record<string, string> }) => {
     loading.value = false;
   }
 };
-
-const goToLogin = () => {
-  router.push("/login");
-};
 </script>
 
 <template>
   <div
-    class="flex justify-center items-center min-h-screen p-8 bg-gradient-to-br from-[#667eea] to-[#764ba2]"
+    class="flex justify-center items-center min-h-screen p-8 bg-linear-to-br from-light via-secondary-50 to-primary-50"
   >
     <Card class="w-full max-w-[450px]">
       <template #header>
@@ -91,7 +87,7 @@ const goToLogin = () => {
                 name="name"
                 type="text"
                 placeholder="Enter your name"
-                class="w-full"
+                fluid
                 :disabled="loading"
                 :invalid="$form.name?.invalid"
               />
@@ -107,7 +103,7 @@ const goToLogin = () => {
                 name="email"
                 type="email"
                 placeholder="Enter your email"
-                class="w-full"
+                fluid
                 :disabled="loading"
                 :invalid="$form.email?.invalid"
               />
@@ -123,7 +119,7 @@ const goToLogin = () => {
                 name="password"
                 placeholder="Enter your password"
                 toggleMask
-                class="w-full"
+                fluid
                 :disabled="loading"
                 :invalid="$form.password?.invalid"
               />
@@ -147,7 +143,7 @@ const goToLogin = () => {
                 placeholder="Confirm your password"
                 :feedback="false"
                 toggleMask
-                class="w-full"
+                fluid
                 :disabled="loading"
                 :invalid="$form.confirmPassword?.invalid"
               />
@@ -165,13 +161,17 @@ const goToLogin = () => {
               type="submit"
               label="Register"
               icon="pi pi-user-plus"
-              class="w-full"
+              fluid
               :loading="loading"
             />
 
-            <div class="flex justify-center items-center gap-2 text-sm">
+            <div class="flex justify-center items-center gap-1 text-sm">
               <span>Already have an account?</span>
-              <Button label="Login" link @click="goToLogin" :disabled="loading" />
+              <a
+                href="/login"
+                class="text-primary-500 hover:text-primary-600 font-medium hover:underline"
+                >Login</a
+              >
             </div>
           </div>
         </Form>
