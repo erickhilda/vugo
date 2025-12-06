@@ -17,7 +17,15 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@primeuix/themes": "^2.0.2",
+    "@vueuse/core": "^14.1.0",
+    "date-fns": "^4.1.0",
+    "ofetch": "^1.5.1",
     "pinia": "^3.0.4",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.5.1",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3"
   },

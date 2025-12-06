@@ -1,19 +1,32 @@
-.PHONY: help dev build run test clean install migrate sqlc
+.PHONY: help dev build run test clean install migrate sqlc frontend-install frontend-dev frontend-build frontend-clean build-all
 
 # Default target
 help:
 	@echo "VuGo - Project Management App"
 	@echo ""
-	@echo "Available commands:"
-	@echo "  make dev          - Run development server with hot reload (requires air)"
-	@echo "  make build        - Build the application"
-	@echo "  make run          - Run the application"
-	@echo "  make test         - Run tests"
-	@echo "  make clean        - Clean build artifacts"
-	@echo "  make install      - Install dependencies"
+	@echo "Backend commands:"
+	@echo "  make dev          - Run backend development server with hot reload (requires air)"
+	@echo "  make build        - Build the backend application"
+	@echo "  make run          - Run the backend application"
+	@echo "  make test         - Run backend tests"
+	@echo "  make clean        - Clean backend build artifacts"
+	@echo "  make install      - Install backend dependencies"
+	@echo ""
+	@echo "Frontend commands:"
+	@echo "  make frontend-install - Install frontend dependencies (requires pnpm)"
+	@echo "  make frontend-dev     - Run frontend dev server"
+	@echo "  make frontend-build   - Build frontend for production"
+	@echo "  make frontend-clean   - Clean frontend build artifacts"
+	@echo ""
+	@echo "Full-stack commands:"
+	@echo "  make build-all    - Build both backend and frontend"
+	@echo ""
+	@echo "Database commands:"
 	@echo "  make migrate-up   - Run database migrations up"
 	@echo "  make migrate-down - Run database migrations down"
-	@echo "  make migrate-make   - Create a new migration file"
+	@echo "  make migrate-make - Create a new migration file"
+	@echo ""
+	@echo "Code generation:"
 	@echo "  make sqlc         - Generate sqlc code from queries"
 	@echo "  make sqlc-validate - Validate sqlc queries"
 
@@ -88,4 +101,31 @@ sqlc-validate:
 	else \
 		echo "sqlc not installed."; \
 	fi
+
+# Frontend commands
+frontend-install:
+	@echo "Installing frontend dependencies..."
+	@cd frontend && pnpm install
+	@echo "Frontend dependencies installed"
+
+frontend-dev:
+	@echo "Starting frontend dev server..."
+	@cd frontend && pnpm dev
+
+frontend-build:
+	@echo "Building frontend for production..."
+	@cd frontend && pnpm build
+	@echo "Frontend build complete: frontend/dist/"
+
+frontend-clean:
+	@echo "Cleaning frontend build artifacts..."
+	@rm -rf frontend/dist
+	@rm -rf frontend/node_modules/.vite
+	@echo "Frontend clean complete"
+
+# Build both backend and frontend
+build-all: frontend-build build
+	@echo "Full build complete!"
+	@echo "  - Backend: bin/vugo"
+	@echo "  - Frontend: frontend/dist/"
 
